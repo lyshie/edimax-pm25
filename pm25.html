@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>PM2.5</title>
+</head>
+
+<body>
+    <div id="edimax" style="text-align:center;">
+        <a href="http://taqm.epa.gov.tw/taqm/tw/PsiMap.aspx" class="media" target="_blank"
+            title="http://taqm.epa.gov.tw/taqm/tw/PsiMap.aspx" rel="nofollow"><img id="avatar" src="//www.chps.tn.edu.tw/dokuwiki/_media/ajax-loader.gif"
+                alt="" width="100" /></a>
+        <p><span id="status"></span></p>
+        <p style="font-size:1.5em;">
+            PM2.5數值：<span id="pm25" style="color:blue;font-weight:bolder;font-size:1.5em;"></span>μg/m³</p>
+        <canvas id="pm25_guage"></canvas><br>
+        <p>
+            溫度：<span id="t" style="color:blue;font-weight:bolder;font-size:1.5em;"></span>°C，溼度：
+            <span id="h" style="color:blue;font-weight:bolder;font-size:1.5em;"></span>%
+        </p>
+        最後更新時間：<span class="" id="time"></span>
+    </div>
+
+    <script type="text/javascript" src="//bernii.github.io/gauge.js/dist/gauge.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript">
+        var opts = {
+            lines: 12, // The number of lines to draw
+            angle: 0.15, // The length of each line
+            lineWidth: 0.44, // The line thickness
+            pointer:
+            {
+                length: 0.9, // The radius of the inner circle
+                strokeWidth: 0.035, // The rotation offset
+                color: '#000000' // Fill color
+            },
+            limitMax: 'false', // If true, the pointer will not go past the end of the gauge
+            colorStart: '#6FADCF', // Colors
+            colorStop: '#8FC0DA', // just experiment with them
+            strokeColor: '#E0E0E0', // to see which ones work best for you
+            generateGradient: true,
+            percentColors: [
+                [0.0, "#31cf00"],
+                [0.36, "#31cf00"],
+                [0.54, "#ff9a00"],
+                [0.71, "#990000"],
+                [1.0, "#ce30ff"]
+            ]
+        };
+    </script>
+    <script type="text/javascript">
+        function update_pm25()
+        {
+            var ts = (new Date()).getTime();
+
+            $.ajax(
+            {
+                url: "//query.yahooapis.com/v1/public/yql",
+                jsonp: "callback",
+                dataType: "jsonp",
+                data:
+                {
+                    q: "select * from json where url='https://airbox.edimaxcloud.com/devices?token=EA81A1FA-8EDB-4CA0-B07B-A881C74B0401&id=74DA3895DF40&ts=" +
+                        ts + "'",
+                    diagnostics: false,
+                    format: "json"
+                },
+                success: function(response)
+                {
+                    console.log(response);
+
+                    if (response.query.results.json.devices)
+                    {
+                        var j = response.query.results.json.devices;
+
+                        var name = j.time;
+                        var pm25 = parseInt(j.pm25);
+                        var t = j.t;
+                        var h = j.h;
+                        var time = j.time;
+                        var baseurl = '//www.chps.tn.edu.tw';
+                        var img = '/dokuwiki/_media/psi:1.png';
+
+                        var target = document.getElementById(
+                            'pm25_guage'); // your canvas element
+                        var gauge = new Gauge(target).setOptions(
+                            opts); // create sexy gauge!
+                        gauge.maxValue = 100; // set max gauge value
+                        gauge.animationSpeed = 32; // set animation speed (32 is default value)
+                        gauge.set(pm25); // set actual value
+
+
+                        if (pm25 < 36)
+                        { // 低
+                            img = '/dokuwiki/_media/psi:1.png';
+                            status =
+                                '<span style="color:#31cf00">空品良好適合趴趴走</span>';
+                        }
+                        else if (pm25 < 54)
+                        { // 中
+                            img = '/dokuwiki/_media/psi:2.png';
+                            status =
+                                '<span style="color:#ff9a00">可正常戶外活動，若不適者請戴口罩</span>';
+                        }
+                        else if (pm25 < 71)
+                        { // 高
+                            img = '/dokuwiki/_media/psi:3.png';
+                            status =
+                                '<span style="color:#990000">不適者減少戶外活動，敏感族群建議戴口罩</span>';
+                        }
+                        else
+                        { // 非常高
+                            img = '/dokuwiki/_media/psi:4.png';
+                            status =
+                                '<span style="color:#ce30ff">不適者減少戶外活動，敏感族群避免外出</span>';
+                        }
+
+                        $('#edimax #name').text(name);
+                        $('#edimax #pm25').text(pm25);
+                        $('#edimax #t').text(t);
+                        $('#edimax #h').text(h);
+                        $('#edimax #time').text(time);
+                        $('#edimax #avatar').attr('src', baseurl +
+                            img);
+                        $('#edimax #status').html(status);
+
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function()
+        {
+            update_pm25();
+            setInterval(update_pm25, 1000 * 60 * 5);
+        });
+    </script>
+</body>
+
+</html>
