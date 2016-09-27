@@ -54,6 +54,7 @@
         function update_pm25()
         {
             var ts = (new Date()).getTime();
+            var mac = '74DA3895DF40';
 
             $.ajax(
             {
@@ -62,7 +63,8 @@
                 dataType: "jsonp",
                 data:
                 {
-                    q: "select * from json where url='https://airbox.edimaxcloud.com/devices?token=EA81A1FA-8EDB-4CA0-B07B-A881C74B0401&id=74DA3895DF40&ts=" +
+                    q: "select * from json where url='https://airbox.edimaxcloud.com/devices?token=EA81A1FA-8EDB-4CA0-B07B-A881C74B0401&id=" +
+                        mac + "&ts=" +
                         ts + "'",
                     diagnostics: false,
                     format: "json"
