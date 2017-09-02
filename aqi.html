@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <script src="//code.jquery.com/jquery-latest.min.js"></script>
+</head>
+
+<body>
+
+    <div id="aqi" style="text-align:center;font-size:0.8em;">
+        <span class="bs-wrap bs-wrap-image" data-img-shape="rounded"><a href="http://taqm.epa.gov.tw/taqm/tw/PsiMap.aspx" class="media" target="_blank" title="http://taqm.epa.gov.tw/taqm/tw/PsiMap.aspx"  rel="nofollow"><img src="//www.chps.tn.edu.tw/dokuwiki/_media/ajax-loader.gif?w=100&amp;tok=655062" class="mediacenter" alt="" width="100" /></a>
+            </span>
+        <br>
+        <a href="http://taqm.epa.gov.tw/taqm/tw/Site/Tainan.aspx" target="_blank">臺南市臺南測站</a>
+        <br>空氣品質指標(AQI)：
+        <span class="small" id="aqi_value"></span>
+        <br>人體健康影響：
+        <span class="small" id="aqi_status"></span>
+        <br>
+        <span class="small" id="aqi_msg"></span>
+        <br>
+        <span class="small" id="aqi_pt"></span>
+    </div>
+
+    <script type="text/javascript">
+        jQuery(function() {
+            function get_aqi() {
+                var aqi = '';
+                var status = '';
+                var pt = '';
+                var img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:1.png';
+                var msg = '';
+                var ts = (new Date()).getTime();
+
+
+                $.ajax({
+                    url: "//query.yahooapis.com/v1/public/yql",
+                    jsonp: "callback",
+                    dataType: "jsonp",
+                    data: {
+                        q: "select * from json where url='http://opendata2.epa.gov.tw/AQI.json" + '?ts=' + ts + "'",
+                        diagnostics: true,
+                        format: "json"
+                    },
+                    success: function(response) {
+                        if (response.query && response.query.results && response.query.results.json) {
+                            var json = response.query.results.json.json;
+
+                            jQuery.each(json, function(key, val) {
+                                if (val.hasOwnProperty('County') && val['County'] == '臺南市') {
+                                    if (val.hasOwnProperty('SiteName') && val['SiteName'] == '臺南') {
+                                        aqi = parseInt(val['AQI']);
+                                        status = val['Status'];
+                                        pt = val['PublishTime'];
+                                        if (aqi <= 50) {
+                                            img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:1.png';
+                                            msg = '空品良好適合趴趴走';
+                                        } else if (51 <= aqi && aqi <= 100) {
+                                            img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:2.png';
+                                            msg = '可正常戶外活動，若不適者請戴口罩';
+                                        } else if (101 <= aqi && aqi <= 150) {
+                                            img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:3.png';
+                                            msg = '不適者減少戶外活動，敏感族群建議戴口罩';
+                                        } else if (151 <= aqi && aqi <= 300) {
+                                            img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:4.png';
+                                            msg = '不適者減少戶外活動，敏感族群避免外出';
+                                        } else if (301 <= aqi) {
+                                            img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:4.png';
+                                            msg = '不適者減少戶外活動，敏感族群避免外出';
+                                        }
+
+                                        jQuery('#aqi img').attr('src', img);
+                                        jQuery('#aqi #aqi_value').text(aqi);
+                                        jQuery('#aqi #aqi_status').text(status);
+                                        jQuery('#aqi #aqi_msg').text(msg);
+                                        jQuery('#aqi #aqi_pt').text(pt);
+                                    }
+                                }
+                            });
+
+
+                        }
+
+                    }
+
+                });
+
+            }
+
+            get_aqi();
+        });
+    </script>
+</body>
+
+</html>
