@@ -57,19 +57,19 @@
                                         pt = val['PublishTime'];
                                         if (aqi <= 50) {
                                             img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:1.png';
-                                            msg = '空品良好適合趴趴走';
+                                            msg = '指標小於50 戶外活動好安心';
                                         } else if (51 <= aqi && aqi <= 100) {
                                             img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:2.png';
-                                            msg = '可正常戶外活動，若不適者請戴口罩';
+                                            msg = '指標介於51~100 可正常戶外活動';
                                         } else if (101 <= aqi && aqi <= 150) {
                                             img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:3.png';
-                                            msg = '不適者減少戶外活動，敏感族群建議戴口罩';
-                                        } else if (151 <= aqi && aqi <= 300) {
+                                            msg = '指標介於101~150 敏感體質要留意';
+                                        } else if (151 <= aqi && aqi <= 200) {
+                                            img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:3.png';
+                                            msg = '指標介於151~200 減少運動多休息';
+                                        } else if (201 <= aqi) {
                                             img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:4.png';
-                                            msg = '不適者減少戶外活動，敏感族群避免外出';
-                                        } else if (301 <= aqi) {
-                                            img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:4.png';
-                                            msg = '不適者減少戶外活動，敏感族群避免外出';
+                                            msg = '指標大於201 戶外活動要暫停';
                                         }
 
                                         jQuery('#aqi img').attr('src', img);
