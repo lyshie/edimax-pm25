@@ -53,24 +53,29 @@
     <script type="text/javascript">
         function update_pm25()
         {
+            var ts = (new Date()).getTime();
             var mac = '74DA3895DF40';
 
             $.ajax(
             {
-                url: "//jsonp.herokuapp.com/?",
+                url: "//query.yahooapis.com/v1/public/yql",
                 jsonp: "callback",
                 dataType: "jsonp",
                 data:
                 {
-                    url: "https://ab2.edimaxcloud.com/devices?token=2cf933ee-4d2f-4a87-b146-6ef4ac344769&id=" + mac
+                    q: "select * from json where url='https://ab2.edimaxcloud.com/devices?token=2cf933ee-4d2f-4a87-b146-6ef4ac344769&id=" +
+                        mac + "&ts=" +
+                        ts + "'",
+                    diagnostics: false,
+                    format: "json"
                 },
                 success: function(response)
                 {
                     console.log(response);
 
-                    if (response.devices)
+                    if (response.query.results.json.devices)
                     {
-                        var j = response.devices[0];
+                        var j = response.query.results.json.devices;
 
                         var name = j.time;
                         var pm25 = parseInt(j.pm25);
