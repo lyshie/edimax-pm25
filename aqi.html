@@ -57,19 +57,16 @@
                                         pt = val['PublishTime'];
                                         if (aqi <= 50) {
                                             img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:1.png';
-                                            msg = '空品良好適合趴趴走';
                                         } else if (51 <= aqi && aqi <= 100) {
                                             img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:2.png';
-                                            msg = '可正常戶外活動，若不適者請戴口罩';
                                         } else if (101 <= aqi && aqi <= 150) {
                                             img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:3.png';
-                                            msg = '不適者減少戶外活動，敏感族群建議戴口罩';
-                                        } else if (151 <= aqi && aqi <= 300) {
+                                        } else if (151 <= aqi && aqi <= 200) {
                                             img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:4.png';
-                                            msg = '不適者減少戶外活動，敏感族群避免外出';
+                                        } else if (201 <= aqi && aqi <= 300) {
+                                            img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:4.png';
                                         } else if (301 <= aqi) {
-                                            img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:4.png';
-                                            msg = '不適者減少戶外活動，敏感族群避免外出';
+                                            img = '//www.chps.tn.edu.tw/dokuwiki/_media/psi:5.png';
                                         }
 
                                         jQuery('#aqi img').attr('src', img);
