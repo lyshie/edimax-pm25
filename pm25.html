@@ -63,7 +63,7 @@
                 dataType: "jsonp",
                 data:
                 {
-                    q: "select * from json where url='https://ab2.edimaxcloud.com/devices?token=2cf933ee-4d2f-4a87-b146-6ef4ac344769&id=" +
+                    q: "select * from json where url='https://pm25.lass-net.org/data/last.php?device_id=" +
                         mac + "&ts=" +
                         ts + "'",
                     diagnostics: false,
@@ -73,15 +73,16 @@
                 {
                     console.log(response);
 
-                    if (response.query.results.json.devices)
+                    if (response.query.results.json.feeds.AirBox2)
                     {
-                        var j = response.query.results.json.devices;
+                        var j = response.query.results.json.feeds.AirBox2;
 
-                        var name = j.time;
-                        var pm25 = parseInt(j.pm25);
-                        var t = j.t;
-                        var h = j.h;
-                        var time = j.time;
+                        var name = j.device;
+                        var pm25 = parseInt(j.s_d0);
+                        var t = j.s_t0;
+                        var h = j.s_h0;
+                        var time = new Date(j.timestamp);
+                        time = time.toLocaleString();
                         var baseurl = '//www.chps.tn.edu.tw';
                         var img = '/dokuwiki/_media/psi:1.png';
 
