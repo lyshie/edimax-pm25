@@ -56,6 +56,11 @@
             var ts = (new Date()).getTime();
             var mac = '74DA3895DF40';
 
+            if (location.hash) {
+                mac = location.hash;
+                mac = mac.replace(/#/, '');
+            }
+
             $.ajax(
             {
                 url: "//query.yahooapis.com/v1/public/yql",
@@ -73,10 +78,19 @@
                 {
                     console.log(response);
 
+                    var j = null;
+
+                    if (response.query.results.json.feeds.AirBox)
+                    {
+                        j = response.query.results.json.feeds.AirBox;
+                    }
+
                     if (response.query.results.json.feeds.AirBox2)
                     {
-                        var j = response.query.results.json.feeds.AirBox2;
+                        j = response.query.results.json.feeds.AirBox2;
+                    }
 
+                    if (j) {
                         var name = j.device;
                         var pm25 = parseInt(j.s_d0);
                         var t = j.s_t0;
