@@ -63,31 +63,25 @@
 
             $.ajax(
             {
-                url: "//query.yahooapis.com/v1/public/yql",
-                jsonp: "callback",
-                dataType: "jsonp",
-                data:
-                {
-                    q: "select * from json where url='https://pm25.lass-net.org/data/last.php?device_id=" +
-                        mac + "&ts=" +
-                        ts + "'",
-                    diagnostics: false,
-                    format: "json"
-                },
+                url: "https://cors.io/?" + "https://pm25.lass-net.org/data/last.php?" + $.param({
+                    device_id: mac,
+                    ts: ts
+                }),
+                dataType: "json",
                 success: function(response)
                 {
                     console.log(response);
 
                     var j = null;
 
-                    if (response.query.results.json.feeds.AirBox)
+                    if (response.feeds[0].AirBox)
                     {
-                        j = response.query.results.json.feeds.AirBox;
+                        j = response.feeds[0].AirBox;
                     }
 
-                    if (response.query.results.json.feeds.AirBox2)
+                    if (response.feeds[0].AirBox2)
                     {
-                        j = response.query.results.json.feeds.AirBox2;
+                        j = response.feeds[0].AirBox2;
                     }
 
                     if (j) {

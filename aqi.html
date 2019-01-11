@@ -36,18 +36,10 @@
 
 
                 jQuery.ajax({
-                    url: "//query.yahooapis.com/v1/public/yql",
-                    jsonp: "callback",
-                    dataType: "jsonp",
-                    data: {
-                        q: "select * from json where url='http://opendata2.epa.gov.tw/AQI.json" + '?ts=' + ts + "'",
-                        diagnostics: true,
-                        format: "json"
-                    },
-                    success: function(response) {
-                        if (response.query && response.query.results && response.query.results.json) {
-                            var json = response.query.results.json.json;
-
+                    url: "https://cors.io/?" + "http://opendata2.epa.gov.tw/AQI.json?" + jQuery.param({ts: ts}),
+                    dataType: "json",
+                    success: function(json) {
+                        if (json) {
                             jQuery.each(json, function(key, val) {
                                 if (val.hasOwnProperty('County') && val['County'] == '臺南市') {
                                     if (val.hasOwnProperty('SiteName') && val['SiteName'] == '臺南') {
