@@ -14,7 +14,7 @@
         <span class="bs-wrap bs-wrap-image" data-img-shape="rounded"><a href="http://taqm.epa.gov.tw/taqm/tw/PsiMap.aspx" class="media" target="_blank" title="http://taqm.epa.gov.tw/taqm/tw/PsiMap.aspx"  rel="nofollow"><img src="//www.chps.tn.edu.tw/dokuwiki/_media/ajax-loader.gif?w=100&amp;tok=655062" class="mediacenter" alt="" width="100" /></a>
             </span>
         <br>
-        <a href="http://taqm.epa.gov.tw/taqm/tw/Site/Tainan.aspx" target="_blank">臺南市臺南測站</a>
+        <span class="small" id="aqi_site"></span>
         <br>空氣品質指標(AQI)：
         <span class="small" id="aqi_value"></span>
         <br>人體健康影響：
@@ -26,6 +26,16 @@
 
     <script type="text/javascript">
         jQuery(function() {
+            var url = new URL(location);
+
+            // county
+            var county = url.searchParams.get('county');
+            county = county ? county : '臺南市';
+
+            // sitename
+            var sitename = url.searchParams.get('sitename');
+            sitename = sitename ? sitename : '臺南';
+
             function get_aqi() {
                 var aqi = '';
                 var status = '';
@@ -41,8 +51,8 @@
                     success: function(json) {
                         if (json) {
                             jQuery.each(json, function(key, val) {
-                                if (val.hasOwnProperty('County') && val['County'] == '臺南市') {
-                                    if (val.hasOwnProperty('SiteName') && val['SiteName'] == '臺南') {
+                                if (val.hasOwnProperty('County') && val['County'] == county) {
+                                    if (val.hasOwnProperty('SiteName') && val['SiteName'] == sitename) {
                                         aqi = parseInt(val['AQI']);
                                         status = val['Status'];
                                         pt = val['PublishTime'];
@@ -65,6 +75,7 @@
                                         jQuery('#aqi #aqi_status').text(status);
                                         jQuery('#aqi #aqi_msg').text(msg);
                                         jQuery('#aqi #aqi_pt').text(pt);
+                                        jQuery('#aqi #aqi_site').text(county + sitename + '測站');
                                     }
                                 }
                             });
