@@ -93,7 +93,7 @@
 
             $.ajax(
             {
-                url: "https://cors.io/?" + "https://pm25.lass-net.org/data/last.php?" + $.param({
+                url: "https://cors-anywhere.herokuapp.com/" + "https://pm25.lass-net.org/data/last.php?" + $.param({
                     device_id: mac,
                     ts: ts
                 }),

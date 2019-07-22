@@ -46,7 +46,7 @@
 
 
                 jQuery.ajax({
-                    url: "https://cors.io/?" + "http://opendata2.epa.gov.tw/AQI.json?" + jQuery.param({ts: ts}),
+                    url: "https://cors-anywhere.herokuapp.com/" + "http://opendata2.epa.gov.tw/AQI.json?" + jQuery.param({ts: ts}),
                     dataType: "json",
                     success: function(json) {
                         if (json) {
